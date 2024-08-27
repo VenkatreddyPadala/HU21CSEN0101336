@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Search</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Product Search</h1>
+        <form id="productForm" class="border p-4 bg-light" method="GET" action="/products">
+            <div class="form-group">
+                <label for="company">Select Company:</label>
+                <select name="company" id="company" class="form-control">
+                    <option value="" disabled selected>Choose a company</option>
+                    <option value="AMZ">AMZ</option>
+                    <option value="FLP">FLP</option>
+                    <option value="SNP">SNP</option>
+                    <option value="MYN">MYN</option>
+                    <option value="AZO">AZO</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Select Category:</label>
+                <select name="category" id="category" class="form-control">
+                    <option value="" disabled selected>Choose a category</option>
+                    <option value="Phone">Phone</option>
+                    <option value="Computer">Computer</option>
+                    <option value="TV">TV</option>
+                    <option value="Earphone">Earphone</option>
+                    <option value="Tablet">Tablet</option>
+                    <option value="Charger">Charger</option>
+                    <option value="Mouse">Mouse</option>
+                    <option value="Keypad">Keypad</option>
+                    <option value="Bluetooth">Bluetooth</option>
+                    <option value="Pendrive">Pendrive</option>
+                    <option value="Remote">Remote</option>
+                    <option value="Speaker">Speaker</option>
+                    <option value="Headset">Headset</option>
+                    <option value="Laptop">Laptop</option>
+                    <option value="PC">PC</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label for="minPrice">Minimum Price:</label>
+                    <input type="number" id="minPrice" name="minPrice" class="form-control" placeholder="Minimum Price">
+                </div>
+                <div class="form-group col-md-6">
+                    <label for="maxPrice">Maximum Price:</label>
+                    <input type="number" id="maxPrice" name="maxPrice" class="form-control" placeholder="Maximum Price">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="topN">Top N Products:</label>
+                <input type="number" id="topN" name="topN" class="form-control" placeholder="Number of Products">
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Search</button>
+        </form>
+
+        <div id="results" class="mt-4">
+            <% if (typeof products !== 'undefined' && products.length > 0) { %>
+                <h2>Search Results</h2>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Rating</th>
+                            <th>Discount</th>
+                            <th>Availability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% products.forEach(function(product) { %>
+                            <tr>
+                                <td><%= product.productName %></td>
+                                <td>$<%= product.price %></td>
+                                <td><%= product.rating %></td>
+                                <td><%= product.discount %></td>
+                                <td><%= product.availability %></td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+
+                <% if (totalPages > 1) { %>
+                    <nav>
+                        <ul class="pagination">
+                            <% if (currentPage > 1) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="/products?company=<%= query.company %>&category=<%= query.category %>&minPrice=<%= query.minPrice %>&maxPrice=<%= query.maxPrice %>&topN=<%= query.topN %>&page=<%= currentPage - 1 %>">Previous</a>
+                                </li>
+                            <% } %>
+
+                            <% for (let i = 1; i <= totalPages; i++) { %>
+                                <li class="page-item <%= currentPage === i ? 'active' : '' %>">
+                                    <a class="page-link" href="/products?company=<%= query.company %>&category=<%= query.category %>&minPrice=<%= query.minPrice %>&maxPrice=<%= query.maxPrice %>&topN=<%= query.topN %>&page=<%= i %>"><%= i %></a>
+                                </li>
+                            <% } %>
+
+                            <% if (currentPage < totalPages) { %>
+                                <li class="page-item">
+                                    <a class="page-link" href="/products?company=<%= query.company %>&category=<%= query.category %>&minPrice=<%= query.minPrice %>&maxPrice=<%= query.maxPrice %>&topN=<%= query.topN %>&page=<%= currentPage + 1 %>">Next</a>
+                                </li>
+                            <% } %>
+                        </ul>
+                    </nav>
+                <% } %>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
